@@ -1,0 +1,336 @@
+From 067837f057cad4ab8cb16ada48a2851e0db99acb Mon Sep 17 00:00:00 2001
+From: Santhana Kumar A <santhanakumar@adlinktech.com>
+Date: Thu, 5 Nov 2026 16:36:16 +0530
+Subject: [PATCH] osm-mtk520: device: add initial board support
+
+Signed-off-by: Santhana Kumar A <santhanakumar@adlinktech.com>
+
+diff --git a/mediatek/mt8189/audio_device.xml b/mediatek/mt8189/audio_device.xml
+index f46e881..5cb93bc 100755
+--- a/mediatek/mt8189/audio_device.xml
++++ b/mediatek/mt8189/audio_device.xml
+@@ -7,30 +7,42 @@
+         </versioncontrol>
+         <!-- "kctl name" are the initial mixer settings -->
+         <!-- <kctl name="XXXX" value="XXXX" /> -->
++        <kctl name="I2SOUT0_CH1 DL0_CH1" value="1" />
++        <kctl name="I2SOUT0_CH2 DL0_CH2" value="1" />
++        <kctl name="Line Playback Switch" value="1 1" />
++        <kctl name="HP Playback Switch" value="1 1" />
+         <!--headphone output-->
+         <path name="headphone_output" value="turnon">
+             <kctl name="DAC In Mux" value="Normal Path" />
+             <kctl name="HPL Mux" value="Audio Playback" />
+             <kctl name="HPR Mux" value="Audio Playback" />
++            <kctl name="HP Playback Switch" value="1 1" />
++            <kctl name="Line Playback Switch" value="1 1" />
+         </path>
+         <path name="headphone_output" value="turnoff">
+-            <kctl name="HPL Mux" value="Open" />
+-            <kctl name="HPR Mux" value="Open" />
++            <kctl name="HPL Mux" value="Audio Playback" />
++            <kctl name="HPR Mux" value="Audio Playback" />
++            <kctl name="HP Playback Switch" value="1 1" />
++            <kctl name="Line Playback Switch" value="1 1" />
+         </path>
+         <path name="HP_IMPEDANCE" value="turnon">
+             <kctl name="DAC In Mux" value="Normal Path" />
+             <kctl name="HPL Mux" value="HP Impedance" />
+         </path>
+         <path name="HP_IMPEDANCE" value="turnoff">
+-            <kctl name="HPL Mux" value="Open" />
++            <kctl name="HPL Mux" value="Audio Playback" />
+         </path>
+        <!--speaker output-->
+         <path name="speaker_output" value="turnon">
+             <kctl name="DAC In Mux" value="Normal Path" />
+             <kctl name="LOL Mux" value="Playback" />
++            <kctl name="Line Playback Switch" value="1 1" />
++            <kctl name="HP Playback Switch" value="1 1" />
+         </path>
+         <path name="speaker_output" value="turnoff">
+-            <kctl name="LOL Mux" value="Open" />
++            <kctl name="LOL Mux" value="Playback" />
++            <kctl name="Line Playback Switch" value="1 1" />
++            <kctl name="HP Playback Switch" value="1 1" />
+         </path>
+         <!--headhpone_speaker output-->
+         <path name="headphoneSpeaker_output" value="turnon">
+@@ -38,18 +50,20 @@
+             <kctl name="HPL Mux" value="Audio Playback" />
+             <kctl name="HPR Mux" value="Audio Playback" />
+             <kctl name="LOL Mux" value="Playback" />
++            <kctl name="Line Playback Switch" value="1 1" />
++            <kctl name="HP Playback Switch" value="1 1" />
+         </path>
+         <path name="headphoneSpeaker_output" value="turnoff">
+-            <kctl name="HPL Mux" value="Open" />
+-            <kctl name="HPR Mux" value="Open" />
+-            <kctl name="LOL Mux" value="Open" />
++            <kctl name="HPL Mux" value="Audio Playback" />
++            <kctl name="HPR Mux" value="Audio Playback" />
++            <kctl name="LOL Mux" value="Playback" />
++            <kctl name="Line Playback Switch" value="1 1" />
++            <kctl name="HP Playback Switch" value="1 1" />
+         </path>
+         <!--external_speaker output-->
+         <path name="ext_speaker_output" value="turnon">
+-            <kctl name="Ext_Speaker_Amp Switch" value="1" />
+         </path>
+         <path name="ext_speaker_output" value="turnoff">
+-            <kctl name="Ext_Speaker_Amp Switch" value="0" />
+         </path>
+         <!--mic setting-->
+         <path name="builtin_Mic_Mic1" value="turnon">
+@@ -59,6 +73,9 @@
+             <kctl name="PGA_L_Mux" value="AIN0" />
+             <kctl name="DMIC0_MUX" value="DMIC_DATA0" />
+             <kctl name="DMIC1_MUX" value="DMIC_DATA0" />
++            <kctl name="UL0_CH1 I2SIN0_CH1" value="1" />
++            <kctl name="UL0_CH2 I2SIN0_CH2" value="1" />
++            <kctl name="PGA Capture Switch" value="1 1" />
+         </path>
+         <path name="builtin_Mic_Mic1" value="turnoff">
+             <kctl name="MISO1_MUX" value="UL1_CH2" />
+@@ -66,6 +83,9 @@
+             <kctl name="PGA_L_Mux" value="None" />
+             <kctl name="UL_SRC_MUX" value="AMIC" />
+             <kctl name="UL2_SRC_MUX" value="AMIC" />
++            <kctl name="UL0_CH1 I2SIN0_CH1" value="0" />
++            <kctl name="UL0_CH2 I2SIN0_CH2" value="0" />
++            <kctl name="PGA Capture Switch" value="0 0" />
+         </path>
+         <path name="builtin_Mic_DMic1" value="turnon">
+             <kctl name="MTKAIF_ADDA6_ONLY" value="On" />
+@@ -390,11 +410,17 @@
+             <kctl name="MISO1_MUX" value="UL1_CH1" />
+             <kctl name="ADC_L_Mux" value="Left Preamplifier" />
+             <kctl name="PGA_L_Mux" value="AIN1" />
++            <kctl name="UL0_CH1 I2SIN0_CH1" value="1" />
++            <kctl name="UL0_CH2 I2SIN0_CH2" value="1" />
++            <kctl name="PGA Capture Switch" value="1 1" />
+         </path>
+         <path name="headset_mic_input" value="turnoff">
+             <kctl name="MISO1_MUX" value="UL1_CH2" />
+             <kctl name="ADC_L_Mux" value="Idle" />
+             <kctl name="PGA_L_Mux" value="None" />
++            <kctl name="UL0_CH1 I2SIN0_CH1" value="0" />
++            <kctl name="UL0_CH2 I2SIN0_CH2" value="0" />
++            <kctl name="PGA Capture Switch" value="0 0" />
+         </path>
+         <path name="headset_mic_input_HDR" value="turnon">
+             <kctl name="MISO0_MUX" value="UL1_CH1" />
+@@ -505,18 +531,22 @@
+         <path name="PLAYBACK1_TO_ADDA_DL" value="turnon">
+             <kctl name="ADDA_DL_CH1 DL0_CH1" value="1" />
+             <kctl name="ADDA_DL_CH2 DL0_CH2" value="1" />
++            <kctl name="I2SOUT0_CH1 DL0_CH1" value="1" />
++            <kctl name="I2SOUT0_CH2 DL0_CH2" value="1" />
+         </path>
+         <path name="PLAYBACK1_TO_ADDA_DL" value="turnoff">
+             <kctl name="ADDA_DL_CH1 DL0_CH1" value="0" />
+             <kctl name="ADDA_DL_CH2 DL0_CH2" value="0" />
++            <kctl name="I2SOUT0_CH1 DL0_CH1" value="1" />
++            <kctl name="I2SOUT0_CH2 DL0_CH2" value="1" />
+         </path>
+         <path name="PLAYBACK1_TO_I2S0" value="turnon">
+             <kctl name="I2SOUT0_CH1 DL0_CH1" value="1" />
+             <kctl name="I2SOUT0_CH2 DL0_CH2" value="1" />
+         </path>
+         <path name="PLAYBACK1_TO_I2S0" value="turnoff">
+-            <kctl name="I2SOUT0_CH1 DL0_CH1" value="0" />
+-            <kctl name="I2SOUT0_CH2 DL0_CH2" value="0" />
++            <kctl name="I2SOUT0_CH1 DL0_CH1" value="1" />
++            <kctl name="I2SOUT0_CH2 DL0_CH2" value="1" />
+         </path>
+         <path name="PLAYBACK1_TO_I2S1" value="turnon">
+             <kctl name="I2SOUT1_CH1 DL0_CH1" value="1" />
+@@ -529,10 +559,14 @@
+         <path name="PLAYBACK2_TO_ADDA_DL" value="turnon">
+             <kctl name="ADDA_DL_CH1 DL2_CH1" value="1" />
+             <kctl name="ADDA_DL_CH2 DL2_CH2" value="1" />
++            <kctl name="I2SOUT0_CH1 DL2_CH1" value="1" />
++            <kctl name="I2SOUT0_CH2 DL2_CH2" value="1" />
+         </path>
+         <path name="PLAYBACK2_TO_ADDA_DL" value="turnoff">
+             <kctl name="ADDA_DL_CH1 DL2_CH1" value="0" />
+             <kctl name="ADDA_DL_CH2 DL2_CH2" value="0" />
++            <kctl name="I2SOUT0_CH1 DL2_CH1" value="0" />
++            <kctl name="I2SOUT0_CH2 DL2_CH2" value="0" />
+         </path>
+         <path name="PLAYBACK2_TO_I2S0" value="turnon">
+             <kctl name="I2SOUT0_CH1 DL2_CH1" value="1" />
+@@ -561,10 +595,14 @@
+         <path name="PLAYBACK12_TO_ADDA_DL" value="turnon">
+             <kctl name="ADDA_DL_CH1 DL1_CH1" value="1" />
+             <kctl name="ADDA_DL_CH2 DL1_CH2" value="1" />
++            <kctl name="I2SOUT0_CH1 DL1_CH1" value="1" />
++            <kctl name="I2SOUT0_CH2 DL1_CH2" value="1" />
+         </path>
+         <path name="PLAYBACK12_TO_ADDA_DL" value="turnoff">
+             <kctl name="ADDA_DL_CH1 DL1_CH1" value="0" />
+             <kctl name="ADDA_DL_CH2 DL1_CH2" value="0" />
++            <kctl name="I2SOUT0_CH1 DL1_CH1" value="0" />
++            <kctl name="I2SOUT0_CH2 DL1_CH2" value="0" />
+         </path>
+         <path name="PLAYBACK12_TO_I2S0" value="turnon">
+             <kctl name="I2SOUT0_CH1 DL1_CH1" value="1" />
+@@ -609,10 +647,14 @@
+         <path name="PLAYBACK3_TO_ADDA_DL" value="turnon">
+             <kctl name="ADDA_DL_CH1 DL3_CH1" value="1" />
+             <kctl name="ADDA_DL_CH2 DL3_CH2" value="1" />
++            <kctl name="I2SOUT0_CH1 DL3_CH1" value="1" />
++            <kctl name="I2SOUT0_CH2 DL3_CH2" value="1" />
+         </path>
+         <path name="PLAYBACK3_TO_ADDA_DL" value="turnoff">
+             <kctl name="ADDA_DL_CH1 DL3_CH1" value="0" />
+             <kctl name="ADDA_DL_CH2 DL3_CH2" value="0" />
++            <kctl name="I2SOUT0_CH1 DL3_CH1" value="0" />
++            <kctl name="I2SOUT0_CH2 DL3_CH2" value="0" />
+         </path>
+         <path name="PLAYBACK3_TO_I2S0" value="turnon">
+             <kctl name="I2SOUT0_CH1 DL3_CH1" value="1" />
+@@ -670,16 +712,6 @@
+             <kctl name="I2SOUT0_CH1 DL4_CH1" value="0" />
+             <kctl name="I2SOUT0_CH2 DL4_CH2" value="0" />
+         </path>
+-        <path name="PLAYBACK2_TO_I2S0" value="turnon">
+-            <kctl name="I2SOUT0_CH1 DL2_CH1" value="1" />
+-            <kctl name="I2SOUT0_CH2 DL2_CH2" value="1" />
+-            <kctl name="I2S_OUT0_Mux" value="Dummy_Widget" />
+-        </path>
+-        <path name="PLAYBACK2_TO_I2S0" value="turnoff">
+-            <kctl name="I2SOUT0_CH1 DL2_CH1" value="0" />
+-            <kctl name="I2SOUT0_CH2 DL2_CH2" value="0" />
+-            <kctl name="I2S_OUT0_Mux" value="Normal" />
+-        </path>
+         <path name="PLAYBACK5_TO_I2S1" value="turnon">
+             <kctl name="I2SOUT1_CH1 DL4_CH1" value="1" />
+             <kctl name="I2SOUT1_CH2 DL4_CH2" value="1" />
+@@ -810,6 +842,9 @@
+             <kctl name="UL_CM1_CH1 ADDA_UL_CH1" value="1" />
+             <kctl name="UL_CM1_CH2 ADDA_UL_CH2" value="1" />
+             <kctl name="CM1_UL_MUX" value="CM1_16CH_PATH" />
++            <kctl name="UL0_CH1 I2SIN0_CH1" value="1" />
++            <kctl name="UL0_CH2 I2SIN0_CH2" value="1" />
++            <kctl name="PGA Capture Switch" value="1 1" />
+         </path>
+         <path name="ADDA_TO_CAPTURE1" value="turnoff">
+             <kctl name="UL9_CH1 ADDA_UL_CH1" value="0" />
+@@ -817,6 +852,9 @@
+             <kctl name="UL_CM1_CH1 ADDA_UL_CH1" value="0" />
+             <kctl name="UL_CM1_CH2 ADDA_UL_CH2" value="0" />
+             <kctl name="CM1_UL_MUX" value="CM1_2CH_PATH" />
++            <kctl name="UL0_CH1 I2SIN0_CH1" value="0" />
++            <kctl name="UL0_CH2 I2SIN0_CH2" value="0" />
++            <kctl name="PGA Capture Switch" value="0 0" />
+         </path>
+         <path name="ADDA_TO_CAPTURE1_4CH" value="turnon">
+             <kctl name="UL_CM1_CH3 ADDA_UL_CH1" value="1" />
+@@ -1046,12 +1084,14 @@
+             <kctl name="UL1_CH2 DL6_CH2" value="0" />
+         </path>
+         <path name="I2S0_TO_CAPTURE2" value="turnon">
+-            <kctl name="UL1_CH1 I2SIN0_CH1" value="1" />
+-            <kctl name="UL1_CH2 I2SIN0_CH2" value="1" />
++            <kctl name="UL0_CH1 I2SIN0_CH1" value="1" />
++            <kctl name="UL0_CH2 I2SIN0_CH2" value="1" />
++            <kctl name="PGA Capture Switch" value="1 1" />
+         </path>
+         <path name="I2S0_TO_CAPTURE2" value="turnoff">
+-            <kctl name="UL1_CH1 I2SIN0_CH1" value="0" />
+-            <kctl name="UL1_CH2 I2SIN0_CH2" value="0" />
++            <kctl name="UL0_CH1 I2SIN0_CH1" value="0" />
++            <kctl name="UL0_CH2 I2SIN0_CH2" value="0" />
++            <kctl name="PGA Capture Switch" value="0 0" />
+         </path>
+         <path name="I2S0_TO_CAPTURE4" value="turnon">
+             <kctl name="UL3_CH1 I2SIN0_CH1" value="1" />
+diff --git a/mediateksample/aiot8391p2_64_bsp/device-vext.mk b/mediateksample/aiot8391p2_64_bsp/device-vext.mk
+index 7e3490d..509feff 100644
+--- a/mediateksample/aiot8391p2_64_bsp/device-vext.mk
++++ b/mediateksample/aiot8391p2_64_bsp/device-vext.mk
+@@ -2,6 +2,11 @@ PRODUCT_PROPERTY_OVERRIDES :=
+ PRODUCT_COPY_FILES :=
+ MTK_OUT_OF_TREE_KERNEL_MODULES :=
+ 
++# sdiouart firmware
++wlan_patch_folder := vendor/mediatek/proprietary/hardware/connectivity/firmware/wlan
++PRODUCT_COPY_FILES += $(wlan_patch_folder)/sdiouart8997_combo_v4.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/sdiouart8997_combo_v4.bin
++BOARD_VENDOR_KERNEL_MODULES_OPTIONS_FILE := $(LOCAL_PATH)/modules.options
++
+ # device/mediateksample/aiot8391p2_64_bsp/device.mk
+ PRODUCT_COPY_FILES += $(LOCAL_PATH)/init.mtkgki.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.mtkgki.rc
+ PRODUCT_COPY_FILES += $(LOCAL_PATH)/factory_init.project.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/factory_init.project.rc
+diff --git a/mediateksample/aiot8391p2_64_bsp/init.project.rc b/mediateksample/aiot8391p2_64_bsp/init.project.rc
+index 6065980..76a7e51 100644
+--- a/mediateksample/aiot8391p2_64_bsp/init.project.rc
++++ b/mediateksample/aiot8391p2_64_bsp/init.project.rc
+@@ -48,7 +48,8 @@ on post-fs-data
+     chmod 0660 /data/misc/wifi/p2p_supplicant.conf
+ 
+     #give system access to rfkill device node
+-    chmod 0660 /dev/rfkill
++    chmod 0666 /dev/rfkill
++    chown bluetooth bluetooth /dev/rfkill
+ 
+     # dhcp server
+     mkdir /data/misc/dhcp 0770 dhcp wifi
+diff --git a/mediateksample/aiot8391p2_64_bsp/ko_order_table.csv b/mediateksample/aiot8391p2_64_bsp/ko_order_table.csv
+index 04266dc..9b912e0 100644
+--- a/mediateksample/aiot8391p2_64_bsp/ko_order_table.csv
++++ b/mediateksample/aiot8391p2_64_bsp/ko_order_table.csv
+@@ -62,6 +62,16 @@ phy-mtk-tphy.ko,/../kernel_device_modules-6.1/drivers/phy/mediatek/phy-mtk-tphy.
+ pcie-mediatek-gen3.ko,/../kernel_device_modules-6.1/drivers/pci/controller/pcie-mediatek-gen3.ko,ramdisk,Y,Y,user/userdebug/eng
+ xhci-mtk-hcd-v2.ko,/../kernel_device_modules-6.1/drivers/misc/mediatek/usb/usb_xhci/xhci-mtk-hcd-v2.ko,ramdisk,Y,Y,user/userdebug/eng
+ mtu3.ko,/../kernel_device_modules-6.1/drivers/usb/mtu3/mtu3.ko,ramdisk,Y,Y,user/userdebug/eng
++cfg80211.ko,/net/wireless/cfg80211.ko,ramdisk,Y,Y,user/userdebug/eng
++rfkill.ko,/net/rfkill/rfkill.ko,ramdisk,Y,Y,user/userdebug/eng
++moal.ko,/../kernel_device_modules-6.1/drivers/net/wireless/marvell/mrvl8997/mwifiex/mxm_wifiex/wlan_src/moal.ko,vendor,Y,N,user/userdebug/eng
++mlan.ko,/../kernel_device_modules-6.1/drivers/net/wireless/marvell/mrvl8997/mwifiex/mxm_wifiex/wlan_src/mlan.ko,vendor,Y,N,user/userdebug/eng
++btnxpuart.ko,/../kernel_device_modules-6.1/drivers/bluetooth/btnxpuart.ko,vendor,Y,N,user/userdebug/eng
++realtek.ko,/drivers/net/phy/realtek.ko,ramdisk,Y,Y,user/userdebug/eng
++lan78xx.ko,/drivers/net/usb/lan78xx.ko,ramdisk,Y,Y,user/userdebug/eng
++rtc-pcf85063.ko,/drivers/rtc/rtc-pcf85063.ko,ramdisk,Y,Y,user/userdebug/eng
++spidev.ko,/drivers/spi/spidev.ko,ramdisk,Y,Y,user/userdebug/eng
++microchip.ko,/drivers/net/phy/microchip.ko,ramdisk,Y,Y,user/userdebug/eng
+ an8801.ko,/../kernel_device_modules-6.1/drivers/net/phy/an8801.ko,ramdisk,Y,Y,user/userdebug/eng
+ pcs_xpcs.ko,/drivers/net/pcs/pcs_xpcs.ko,ramdisk,Y,Y,user/userdebug/eng
+ stmmac-platform.ko,/../kernel_device_modules-6.1/drivers/net/ethernet/stmicro/stmmac/stmmac-platform.ko,ramdisk,Y,Y,user/userdebug/eng
+@@ -116,7 +126,7 @@ drm_display_helper.ko,/drivers/gpu/drm/display/drm_display_helper.ko,ramdisk,Y,Y
+ mux_switch.ko,/../kernel/kernel_device_modules-6.1/drivers/misc/mediatek/typec/mux/mux_switch.ko,ramdisk,Y,Y,user/userdebug/eng
+ usb_dp_selector.ko,/../kernel_device_modules-6.1/drivers/misc/mediatek/typec/mux/usb_dp_selector.ko,ramdisk,Y,Y,user/userdebug/eng
+ ts3usbca4.ko,/../kernel_device_modules-6.1/drivers/misc/mediatek/typec/mux/ts3usbca4.ko,ramdisk,Y,Y,user/userdebug/eng
+-panel-koe-tx18d204vm0baa.ko,/../kernel_device_modules-6.1/drivers/gpu/drm/panel/panel-koe-tx18d204vm0baa.ko,ramdisk,Y,Y,user/userdebug/eng
++panel-auo-g101eat026.ko,/../kernel_device_modules-6.1/drivers/gpu/drm/panel/panel-auo-g101eat026.ko,ramdisk,Y,Y,user/userdebug/eng
+ mtk-drm-lvds.ko,/../kernel_device_modules-6.1/drivers/gpu/drm/mediatek/mediatek_v2/mtk-drm-lvds.ko,ramdisk,Y,Y,user/userdebug/eng
+ panel-edp.ko,/../kernel_device_modules-6.1/drivers/gpu/drm/mediatek/mediatek_v2/panel-edp.ko,ramdisk,Y,Y,user/userdebug/eng
+ mtk-drm-edp.ko,/../kernel_device_modules-6.1/drivers/gpu/drm/mediatek/mediatek_v2/mtk_drm_edp/mtk-drm-edp.ko,ramdisk,Y,Y,user/userdebug/eng
+@@ -130,7 +140,7 @@ mtk_panel_ext.ko,/../kernel_device_modules-6.1/drivers/gpu/drm/mediatek/mediatek
+ panel-truly-tdo-bd0598u40004.ko,/../kernel_device_modules-6.1/drivers/gpu/drm/panel/panel-truly-tdo-bd0598u40004.ko,ramdisk,Y,Y,user/userdebug/eng
+ panel-kd-kd101nd451iia002.ko,/../kernel_device_modules-6.1/drivers/gpu/drm/panel/panel-kd-kd101nd451iia002.ko,ramdisk,Y,Y,user/userdebug/eng
+ panel-boe-tv101wum-lmd.ko,/../kernel_device_modules-6.1/drivers/gpu/drm/panel/panel-boe-tv101wum-lmd.ko,ramdisk,Y,Y,user/userdebug/eng
+-panel-startek-kd070fhfid078.ko,/../kernel_device_modules-6.1/drivers/gpu/drm/panel/panel-startek-kd070fhfid078.ko,ramdisk,Y,Y,user/userdebug/eng
++panel-b080uan01.ko,/../kernel_device_modules-6.1/drivers/gpu/drm/panel/panel-b080uan01.ko,ramdisk,Y,Y,user/userdebug/eng
+ mediatek-drm-gateic.ko,/../kernel_device_modules-6.1/drivers/gpu/drm/panel/mediatek-drm-gateic.ko,ramdisk,Y,Y,user/userdebug/eng
+ mediatek-drm-panel-drv.ko,/../kernel_device_modules-6.1/drivers/gpu/drm/panel/mediatek-drm-panel-drv.ko,ramdisk,Y,Y,user/userdebug/eng
+ mediatek-drm.ko,/../kernel_device_modules-6.1/drivers/gpu/drm/mediatek/mediatek_v2/mediatek-drm.ko,ramdisk,Y,Y,user/userdebug/eng
+@@ -142,6 +152,8 @@ mt635x-auxadc.ko,/../kernel_device_modules-6.1/drivers/iio/adc/mt635x-auxadc.ko,
+ rtc-mt6397.ko,/../kernel_device_modules-6.1/drivers/rtc/rtc-mt6397.ko,ramdisk,Y,Y,user/userdebug/eng
+ mtk-spmi-pmic-debug.ko,/../kernel_device_modules-6.1/drivers/mfd/mtk-spmi-pmic-debug.ko,ramdisk,Y,Y,user/userdebug/eng
+ cqhci.ko,/../kernel_device_modules-6.1/drivers/mmc/host/cqhci.ko,ramdisk,Y,Y,user/userdebug/eng
++snd-soc-tlv320aic3x4.ko,/sound/soc/codecs/snd-soc-tlv320aic3x.ko,ramdisk,Y,Y,user/userdebug/eng
++snd-soc-tlv320aic3x4-i2c.ko,/sound/soc/codecs/snd-soc-tlv320aic3x-i2c.ko,ramdisk,Y,Y,user/userdebug/eng
+ mtk-sd.ko,/../kernel/kernel_device_modules-6.1/drivers/mmc/host/mtk-sd.ko,ramdisk,Y,Y,user/userdebug/eng
+ mtk-sdio-proc.ko,/../kernel/kernel_device_modules-6.1/drivers/mmc/host/mtk-sdio-proc.ko,ramdisk,Y,Y,user/userdebug/eng
+ mtk-sdio.ko,/../kernel/kernel_device_modules-6.1/drivers/mmc/host/mtk-sdio.ko,ramdisk,Y,Y,user/userdebug/eng
+diff --git a/mediateksample/aiot8391p2_64_bsp/modules.options b/mediateksample/aiot8391p2_64_bsp/modules.options
+new file mode 100644
+index 0000000..dd83580
+--- /dev/null
++++ b/mediateksample/aiot8391p2_64_bsp/modules.options
+@@ -0,0 +1 @@
++options moal sta_name=wlan cal_data_cfg=none cfg80211_wext=0xf
+-- 
+2.43.0
+

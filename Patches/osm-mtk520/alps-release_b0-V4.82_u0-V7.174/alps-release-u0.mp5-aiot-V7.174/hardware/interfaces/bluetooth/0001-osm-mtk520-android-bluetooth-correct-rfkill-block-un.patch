@@ -1,0 +1,57 @@
+From b3e64d401ac586bd8720e2b7ca38cd2d7c5d6438 Mon Sep 17 00:00:00 2001
+From: Santhana Kumar A <santhanakumar@adlinktech.com>
+Date: Thu, 5 Nov 2026 16:33:31 +0530
+Subject: [PATCH] osm-mtk520: android: bluetooth: correct rfkill block/unblock
+ logic
+
+Signed-off-by: Santhana Kumar A <santhanakumar@adlinktech.com>
+
+diff --git a/aidl/default/net_bluetooth_mgmt.cpp b/aidl/default/net_bluetooth_mgmt.cpp
+index b099c53..be5b7ec 100644
+--- a/aidl/default/net_bluetooth_mgmt.cpp
++++ b/aidl/default/net_bluetooth_mgmt.cpp
+@@ -185,6 +185,8 @@ int NetBluetoothMgmt::waitHciDev(int hci_interface) {
+     }
+   }
+ 
++  ret = -1;
++
+ end:
+   ::close(fd);
+   return ret;
+@@ -256,14 +258,15 @@ int NetBluetoothMgmt::rfkill(int block) {
+ int NetBluetoothMgmt::openHci(int hci_interface) {
+   ALOGI("opening hci interface %d", hci_interface);
+ 
+-  // Block Bluetooth.
+-  rfkill(1);
++  // Unblock Bluetooth.
++  rfkill(0);
+ 
+   // Wait for the HCI interface to complete initialization or to come online.
+-  hci_interface = waitHciDev(hci_interface);
+-  if (hci_interface < 0) {
+-    ALOGE("hci interface not found");
+-    return -1;
++  int wait_ret = waitHciDev(hci_interface);
++  if (wait_ret >= 0) {
++    hci_interface = wait_ret;
++  } else {
++    ALOGW("waitHciDev returned %d, falling back to hci_interface %d", wait_ret, hci_interface);
+   }
+ 
+   // Open the raw HCI socket.
+@@ -297,8 +300,8 @@ void NetBluetoothMgmt::closeHci() {
+     bt_fd_ = -1;
+   }
+ 
+-  // Unblock Bluetooth.
+-  rfkill(0);
++  // Block Bluetooth.
++  rfkill(1);
+ }
+ 
+ }  // namespace aidl::android::hardware::bluetooth::impl
+-- 
+2.43.0
+

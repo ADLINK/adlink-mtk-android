@@ -1,0 +1,33 @@
+From c638f14d7534ba94e3ee3e22bdd1ef48dac94ced Mon Sep 17 00:00:00 2001
+From: Santhana Kumar A <santhanakumar@adlinktech.com>
+Date: Thu, 5 Nov 2026 16:38:37 +0530
+Subject: [PATCH] osm-mtk520: build: update build ID and include spidevtest
+ package
+
+Signed-off-by: Santhana Kumar A <santhanakumar@adlinktech.com>
+
+diff --git a/make/core/build_id.mk b/make/core/build_id.mk
+index 98ccf47..790e19f 100644
+--- a/make/core/build_id.mk
++++ b/make/core/build_id.mk
+@@ -18,4 +18,4 @@
+ # (like "CRB01").  It must be a single word, and is
+ # capitalized by convention.
+ 
+-BUILD_ID=BP2A.250605.031.A3
++BUILD_ID=BP2A.250605.031.A3_v1.0.0.1
+diff --git a/make/target/product/base_system.mk b/make/target/product/base_system.mk
+index a6539bd..18d1e19 100644
+--- a/make/target/product/base_system.mk
++++ b/make/target/product/base_system.mk
+@@ -33,6 +33,7 @@ PRODUCT_PACKAGES += \
+     app_process \
+     appwidget \
+     atrace \
++    spidevtest \
+     audioserver \
+     BackupRestoreConfirmation \
+     bcc \
+-- 
+2.43.0
+
